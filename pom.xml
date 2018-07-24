@@ -273,7 +273,7 @@
           </exclusion>
         </exclusions>
       </dependency>
-      <!-- PowerMock@Java9
+      <!-- PowerMock@Java9 and Java11
       org.powermock for java9, see https://github.com/powermock/powermock/issues/783
       These dependencies substitute org.powermock:powermock-mockito-release-full:jar:full:1.6.4 in java9.
       -->
@@ -282,6 +282,26 @@
         <artifactId>powermock-core</artifactId>
         <version>${powermockVersion}</version>
         <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy</artifactId>
+        <version>1.8.14</version>
+      </dependency>
+      <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy-agent</artifactId>
+        <version>1.8.14</version>
       </dependency>
       <dependency>
         <groupId>org.powermock</groupId>
