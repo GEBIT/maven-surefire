@@ -30,9 +30,9 @@ properties(
     ]
 )
 
-final def oses = ['linux':'ubuntu', 'windows':'Windows && !windows-2012-3']
+final def oses = ['linux':'ubuntu', 'windows && !H24':'Windows && !windows-2012-2 && !windows-2016-1']
 final def mavens = env.BRANCH_NAME == 'master' ? ['3.2.x', '3.3.x', '3.5.x'] : ['3.5.x']
-final def jdks = [7, 8, 9, 10, 11]
+final def jdks = [8, 11]
 
 final def options = ['-e', '-V', '-B', '-nsu', '-P', 'run-its']
 final def goals = ['clean', 'install', 'jacoco:report']
@@ -49,7 +49,7 @@ oses.eachWithIndex { osMapping, indexOfOs ->
             final String stageKey = "${os}-jdk${jdk}-maven${maven}"
 
             def mavenOpts = '-server -XX:+UseG1GC -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:+UseNUMA \
--Xms64m -Djava.awt.headless=true'
+-Xms64m -Djava.awt.headless=true -Dhttps.protocols=TLSv1.2'
             if (jdk > 7) {
                 mavenOpts += ' -XX:+UseStringDeduplication'
             }
