@@ -464,6 +464,9 @@
             <useFile>false</useFile>
             <redirectTestOutputToFile>false</redirectTestOutputToFile>
             <jvm>${jdk.home}/bin/java</jvm>
+            <systemPropertyVariables>
+              <net.bytebuddy.experimental>true</net.bytebuddy.experimental>
+            </systemPropertyVariables>
           </configuration>
         </plugin>
         <plugin>
