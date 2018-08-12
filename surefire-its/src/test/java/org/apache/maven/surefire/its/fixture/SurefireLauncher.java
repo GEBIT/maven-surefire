@@ -126,15 +126,15 @@ public final class SurefireLauncher
         return mavenLauncher.getSubProjectValidator( subProject );
     }
 
-    public SurefireLauncher addEnvVar( String key, String value )
+    private SurefireLauncher addEnvVar( String key, String value )
     {
         mavenLauncher.addEnvVar( key, value );
         return this;
     }
 
-    public SurefireLauncher setMavenOpts(String opts){
-        addEnvVar( "MAVEN_OPTS", opts );
-        return this;
+    public SurefireLauncher setMavenOpts(String opts)
+    {
+        return addEnvVar( "MAVEN_OPTS", opts );
     }
 
     private List<String> getInitialGoals()
@@ -143,8 +143,12 @@ public final class SurefireLauncher
 
         goals.add( "-Dsurefire.version=" + surefireVersion );
 
-        String jacocoAgent = System.getProperty( "jacoco.agent", "" );
-        goals.add( "-Djacoco.agent=" + jacocoAgent );
+        // https://github.com/jacoco/jacoco/issues/663
+        /*if ( Double.parseDouble( System.getProperty( "java.specification.version" ) ) < 11d )
+        {*/
+            String jacocoAgent = System.getProperty( "jacoco.agent", "" );
+            goals.add( "-Djacoco.agent=" + jacocoAgent );
+        /*}*/
 
         return goals;
     }

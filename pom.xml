@@ -101,6 +101,7 @@
     <maven.compiler.testSource>1.${javaVersion}</maven.compiler.testSource>
     <maven.compiler.testTarget>1.${javaVersion}</maven.compiler.testTarget>
     <jvm.args.tests>-server -XX:+UseG1GC -Xms128m -Xmx144m -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -XX:SoftRefLRUPolicyMSPerMB=50 -Djava.awt.headless=true</jvm.args.tests>
+    <skipUnitTests>${skipTests}</skipUnitTests>
   </properties>
 
   <dependencyManagement>
@@ -458,6 +459,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.12.4</version> <!-- ${shadedVersion}, but resolved due to https://issues.apache.org/jira/browse/MRELEASE-799 -->
           <configuration>
+            <skipTests>${skipUnitTests}</skipTests>
             <!-- NOTE: Be sure to isolate the Surefire version under test from the version running the tests! -->
             <useSystemClassLoader>false</useSystemClassLoader>
             <argLine>${jvm.args.tests} ${jacoco.agent} -Dnet.bytebuddy.experimental=true</argLine>
@@ -492,7 +494,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.1</version>
+          <version>0.8.2-SNAPSHOT</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -757,4 +759,21 @@
       </build>
     </profile>
   </profiles>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>plugin-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
+    <pluginRepository>
+      <id>plugin-releases</id>
+      <url>http://repo1.maven.org/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 </project>
