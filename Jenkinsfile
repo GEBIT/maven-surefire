@@ -69,6 +69,9 @@ oses.eachWithIndex { osMapping, indexOfOs ->
                         def boolean makeReports = os == 'linux' && indexOfMaven == mavens.size() - 1 && jdk == 9
                         def failsafeItPort = 8000 + 100 * indexOfMaven + 10 * indexOfJdk
                         def allOptions = options + ["-Dfailsafe-integration-test-port=${failsafeItPort}", "-Dfailsafe-integration-test-stop-port=${1 + failsafeItPort}"]
+                        if (jdk == 11) {
+                            allOptions += ['-DskipUnitTests=true']
+                        }
                         buildProcess(stageKey, jdkName, jdkTestName, mvnName, goals, allOptions, mavenOpts, makeReports)
                     }
                 }
