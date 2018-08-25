@@ -30,6 +30,9 @@ public class ShouldNotRunTest {
     @Test
     public void shouldNotRun()
     {
-        System.out.println( getClass().getSimpleName() + "#shouldNotRun()" );
+        synchronized ( System.out )
+        {
+            System.out.println( getClass().getSimpleName() + "#shouldNotRun()" );
+        }
     }
 }
