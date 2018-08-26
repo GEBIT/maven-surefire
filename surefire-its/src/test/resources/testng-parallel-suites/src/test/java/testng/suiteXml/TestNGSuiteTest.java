@@ -35,8 +35,11 @@ public class TestNGSuiteTest {
 	public void shouldRunAndPrintItself()
 		throws Exception
 	{
-		System.out.println( getClass().getSimpleName() + "#shouldRunAndPrintItself() "
-								+ counter.incrementAndGet() + ".");
+		synchronized ( System.out )
+		{
+			System.out.println( getClass().getSimpleName() + "#shouldRunAndPrintItself() "
+                                    + counter.incrementAndGet() + ".");
+		}
 
 		TimeUnit.SECONDS.sleep( 2 );
 	}

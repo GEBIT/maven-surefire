@@ -177,4 +177,6 @@ mvn verify
 
   * {{{./docker.html}Run tests in Docker}}
 
+  * {{{./parallel-logging.html}Logger in Parallel Tests}}
+
   []
