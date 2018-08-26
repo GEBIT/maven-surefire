@@ -57,11 +57,11 @@ public class Surefire1177TestngParallelSuitesIT
             .verifyErrorFree( 2 )
                 .loadLogLines();
 
-        System.out.println( "lines - 16 : " + lines.get( lines.size() - 16 ) );
-        System.out.println( "lines - 15 : " + lines.get( lines.size() - 15 ) );
+        System.out.println( "lines - 13 : " + lines.get( lines.size() - 13 ) );
+        System.out.println( "lines - 12 : " + lines.get( lines.size() - 12 ) );
 
-        System.out.println( "lines - 16 : " + Arrays.toString( lines.get( lines.size() - 16 ).getBytes() ) );
-        System.out.println( "lines - 15 : " + Arrays.toString( lines.get( lines.size() - 15 ).getBytes() ) );
+        System.out.println( "lines - 13 : " + Arrays.toString( lines.get( lines.size() - 13 ).getBytes() ) );
+        System.out.println( "lines - 12 : " + Arrays.toString( lines.get( lines.size() - 12 ).getBytes() ) );
 
                 //.assertThatLogLine( containsString( "TestNGSuiteTest#shouldRunAndPrintItself()" ), is( 2 ) );
             /*.assertThatLogLine( containsString( "ShouldNotRunTest#shouldNotRun()" ), is( 0 ) )
