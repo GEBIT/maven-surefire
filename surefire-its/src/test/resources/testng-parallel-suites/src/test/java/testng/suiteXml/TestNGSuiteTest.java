@@ -21,6 +21,7 @@ package testng.suiteXml;
 
 import org.testng.annotations.Test;
 
+import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -35,6 +36,8 @@ public class TestNGSuiteTest {
 	public void shouldRunAndPrintItself()
 		throws Exception
 	{
+
+		System.out.println( "our test encoding = " + Charset.defaultCharset() );
 		System.out.println( getClass().getSimpleName() + "#shouldRunAndPrintItself() "
 				+ counter.incrementAndGet() + ".");
 
