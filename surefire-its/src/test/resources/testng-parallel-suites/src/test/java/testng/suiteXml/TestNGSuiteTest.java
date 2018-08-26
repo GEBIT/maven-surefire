@@ -37,9 +37,12 @@ public class TestNGSuiteTest {
 		throws Exception
 	{
 
-		System.out.println( "our test encoding = " + Charset.defaultCharset() );
-		System.out.println( getClass().getSimpleName() + "#shouldRunAndPrintItself() "
-				+ counter.incrementAndGet() + ".");
+		synchronized ( System.out )
+		{
+			//System.out.println( "our test encoding = " + Charset.defaultCharset() );
+			System.out.println( getClass().getSimpleName() + "#shouldRunAndPrintItself() "
+                    + counter.incrementAndGet() + ".");
+		}
 
 		TimeUnit.SECONDS.sleep( 2 );
 	}
