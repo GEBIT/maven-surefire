@@ -21,6 +21,7 @@ package org.apache.maven.surefire.booter;
 
 import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 import org.apache.maven.plugin.surefire.log.api.ConsoleLoggerUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.surefire.report.ConsoleOutputReceiver;
 import org.apache.maven.surefire.report.ConsoleStream;
 import org.apache.maven.surefire.report.ReportEntry;
@@ -31,8 +32,11 @@ import org.apache.maven.surefire.report.StackTraceWriter;
 import org.apache.maven.surefire.report.TestSetReportEntry;
 import org.apache.maven.surefire.util.internal.StringUtils.EncodedArray;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Integer.toHexString;
 import static java.nio.charset.Charset.defaultCharset;
@@ -198,9 +202,23 @@ public class ForkingRunListener
         }
     }
 
+    private static final AtomicInteger INT = new AtomicInteger();
+
     @Override
     public void writeTestOutput( byte[] buf, int off, int len, boolean stdout )
     {
+        try
+        {
+            File console = new File( "target/console-" + INT.getAndIncrement() );
+            //noinspection ResultOfMethodCallIgnored
+            console.createNewFile();
+            String[] msg = { new String( buf, off, len ) };
+            FileUtils.fileWriteArray( console, "UTF-8", msg );
+        }
+        catch ( IOException e )
+        {
+            // do nothing
+        }
         EncodedArray encodedArray = escapeBytesToPrintable( stdout ? stdOutHeader : stdErrHeader, buf, off, len );
 
         synchronized ( target ) // See notes about synchronization/thread safety in class javadoc
@@ -302,6 +320,18 @@ public class ForkingRunListener
 
     private void encodeAndWriteToTarget( String string )
     {
+        try
+        {
+            File console = new File( "target/console-" + INT.getAndIncrement() );
+            //noinspection ResultOfMethodCallIgnored
+            console.createNewFile();
+            String[] msg = { string };
+            FileUtils.fileWriteArray( console, "UTF-8", msg );
+        }
+        catch ( IOException e )
+        {
+            // do nothing
+        }
         byte[] encodeBytes = encodeStringForForkCommunication( string );
         synchronized ( target ) // See notes about synchronization/thread safety in class javadoc
         {
