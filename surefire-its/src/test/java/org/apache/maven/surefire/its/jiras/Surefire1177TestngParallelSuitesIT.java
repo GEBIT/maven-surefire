@@ -25,6 +25,7 @@ import org.apache.maven.surefire.its.fixture.SurefireLauncher;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 import static org.apache.maven.surefire.its.fixture.HelperAssertions.assumeJavaVersion;
 import static org.hamcrest.Matchers.containsString;
@@ -47,6 +48,7 @@ public class Surefire1177TestngParallelSuitesIT
         assumeJavaVersion( 1.7d );
 
         System.out.println( "our encoding = " + Charset.defaultCharset() );
+        System.out.println( Arrays.toString( "TestNGSuiteTest#shouldRunAndPrintItself()".getBytes() ) );
 
         unpack().executeTest()
             .verifyErrorFree( 2 )
