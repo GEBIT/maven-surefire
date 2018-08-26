@@ -24,6 +24,8 @@ import org.apache.maven.surefire.its.fixture.SurefireJUnit4IntegrationTestCase;
 import org.apache.maven.surefire.its.fixture.SurefireLauncher;
 import org.junit.Test;
 
+import java.nio.charset.Charset;
+
 import static org.apache.maven.surefire.its.fixture.HelperAssertions.assumeJavaVersion;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -44,10 +46,12 @@ public class Surefire1177TestngParallelSuitesIT
     {
         assumeJavaVersion( 1.7d );
 
+        System.out.println( "our encoding = " + Charset.defaultCharset() );
+
         unpack().executeTest()
             .verifyErrorFree( 2 )
             .assertThatLogLine( containsString( "ShouldNotRunTest#shouldNotRun()" ), is( 0 ) )
-            .assertThatLogLine( startsWith( "TestNGSuiteTest#shouldRunAndPrintItself()" ), is( 2 ) )
+            .assertThatLogLine( containsString( "TestNGSuiteTest#shouldRunAndPrintItself()" ), is( 2 ) )
             .assertThatLogLine( is( "TestNGSuiteTest#shouldRunAndPrintItself() 1." ), is( 1 ) )
             .assertThatLogLine( is( "TestNGSuiteTest#shouldRunAndPrintItself() 2." ), is( 1 ) );
     }
