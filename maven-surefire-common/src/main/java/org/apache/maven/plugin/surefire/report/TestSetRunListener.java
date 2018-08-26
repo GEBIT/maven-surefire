@@ -163,7 +163,7 @@ public class TestSetRunListener
             //noinspection ResultOfMethodCallIgnored
             console.createNewFile();
             StringWriter sw = new StringWriter();
-            new Throwable("").printStackTrace(new PrintWriter(sw));
+            new Throwable( "" ).printStackTrace( new PrintWriter( sw ) );
             String stackTrace = sw.toString();
             String[] msg = { new String( buf, off, len ) + "\n" + stackTrace };
             FileUtils.fileWriteArray( console, "UTF-8", msg );
