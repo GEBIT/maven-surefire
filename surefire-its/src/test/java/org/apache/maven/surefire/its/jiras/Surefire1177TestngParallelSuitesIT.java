@@ -41,6 +41,8 @@ import static org.hamcrest.Matchers.startsWith;
 public class Surefire1177TestngParallelSuitesIT
     extends SurefireJUnit4IntegrationTestCase
 {
+    private static final String EXPECTED_LINE = "TestNGSuiteTest#shouldRunAndPrintItself()";
+
     @Test
     public void shouldRunTwoSuitesInParallel()
         throws VerificationException
@@ -48,7 +50,7 @@ public class Surefire1177TestngParallelSuitesIT
         assumeJavaVersion( 1.7d );
 
         System.out.println( "our encoding = " + Charset.defaultCharset() );
-        System.out.println( asInts( "TestNGSuiteTest#shouldRunAndPrintItself()".toCharArray() ) );
+        System.out.println( asInts( EXPECTED_LINE.toCharArray() ) );
 
         List<String> lines =
         unpack().executeTest()
@@ -60,6 +62,12 @@ public class Surefire1177TestngParallelSuitesIT
 
         System.out.println( "lines - 14 : " + asInts( lines.get( lines.size() - 14 ).toCharArray() ) );
         System.out.println( "lines - 13 : " + asInts( lines.get( lines.size() - 13 ).toCharArray() ) );
+
+        System.out.println( lines.get( lines.size() - 14 ).contains( EXPECTED_LINE ) );
+        System.out.println( lines.get( lines.size() - 13 ).contains( EXPECTED_LINE ) );
+
+        System.out.println( containsString( EXPECTED_LINE ).matches( lines.get( lines.size() - 14 ) ) );
+        System.out.println( containsString( EXPECTED_LINE ).matches( lines.get( lines.size() - 13 ) ) );
 
                 //.assertThatLogLine( containsString( "TestNGSuiteTest#shouldRunAndPrintItself()" ), is( 2 ) );
             /*.assertThatLogLine( containsString( "ShouldNotRunTest#shouldNotRun()" ), is( 0 ) )
