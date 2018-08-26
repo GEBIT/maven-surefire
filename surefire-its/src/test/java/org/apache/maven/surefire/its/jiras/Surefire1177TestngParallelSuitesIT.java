@@ -20,6 +20,7 @@ package org.apache.maven.surefire.its.jiras;
  */
 
 import org.apache.maven.it.VerificationException;
+import org.apache.maven.surefire.its.fixture.OutputValidator;
 import org.apache.maven.surefire.its.fixture.SurefireJUnit4IntegrationTestCase;
 import org.apache.maven.surefire.its.fixture.SurefireLauncher;
 import org.junit.Test;
@@ -52,9 +53,9 @@ public class Surefire1177TestngParallelSuitesIT
         System.out.println( "our encoding = " + Charset.defaultCharset() );
         System.out.println( asInts( EXPECTED_LINE.toCharArray() ) );
 
-        List<String> lines =
-        unpack().executeTest()
-            .verifyErrorFree( 2 )
+        OutputValidator validator = unpack().executeTest().verifyErrorFree( 2 );
+
+        List<String> lines = validator
                 .loadLogLines();
 
         System.out.println( "lines - 14 : " + lines.get( lines.size() - 14 ) );
@@ -63,11 +64,13 @@ public class Surefire1177TestngParallelSuitesIT
         System.out.println( "lines - 14 : " + asInts( lines.get( lines.size() - 14 ).toCharArray() ) );
         System.out.println( "lines - 13 : " + asInts( lines.get( lines.size() - 13 ).toCharArray() ) );
 
-        System.out.println( lines.get( lines.size() - 14 ).contains( EXPECTED_LINE ) );
-        System.out.println( lines.get( lines.size() - 13 ).contains( EXPECTED_LINE ) );
+        System.out.print( lines.get( lines.size() - 14 ).contains( EXPECTED_LINE ) + "\n" );
+        System.out.print( lines.get( lines.size() - 13 ).contains( EXPECTED_LINE ) + "\n" );
 
-        System.out.println( containsString( EXPECTED_LINE ).matches( lines.get( lines.size() - 14 ) ) );
-        System.out.println( containsString( EXPECTED_LINE ).matches( lines.get( lines.size() - 13 ) ) );
+        System.out.print( containsString( EXPECTED_LINE ).matches( lines.get( lines.size() - 14 ) ) + "\n" );
+        System.out.print( containsString( EXPECTED_LINE ).matches( lines.get( lines.size() - 13 ) ) + "\n" );
+
+        validator.assertThatLogLine( containsString( EXPECTED_LINE ), is( 2 ) );
 
                 //.assertThatLogLine( containsString( "TestNGSuiteTest#shouldRunAndPrintItself()" ), is( 2 ) );
             /*.assertThatLogLine( containsString( "ShouldNotRunTest#shouldNotRun()" ), is( 0 ) )
