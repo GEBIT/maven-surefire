@@ -19,13 +19,18 @@ package org.apache.maven.plugin.surefire.report;
  * under the License.
  */
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 import org.apache.maven.plugin.surefire.runorder.StatisticsReporter;
+import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.surefire.report.ConsoleOutputReceiver;
 import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.RunListener;
@@ -147,11 +152,21 @@ public class TestSetRunListener
         consoleReporter.getConsoleLogger().error( t );
     }
 
+    private static final AtomicInteger INT = new AtomicInteger();
+
     @Override
     public void writeTestOutput( byte[] buf, int off, int len, boolean stdout )
     {
         try
         {
+            File console = new File( "target/console-" + INT.getAndIncrement() );
+            //noinspection ResultOfMethodCallIgnored
+            console.createNewFile();
+            StringWriter sw = new StringWriter();
+            new Throwable("").printStackTrace(new PrintWriter(sw));
+            String stackTrace = sw.toString();
+            String[] msg = { new String( buf, off, len ) + "\n" + stackTrace };
+            FileUtils.fileWriteArray( console, "UTF-8", msg );
             if ( stdout )
             {
                 testStdOut.write( buf, off, len );
