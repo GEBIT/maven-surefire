@@ -30,19 +30,16 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 2.19
  */
 public class TestNGSuiteTest {
-	private static final AtomicInteger counter = new AtomicInteger();
+	private static final AtomicInteger COUNTER = new AtomicInteger();
 
 	@Test
 	public void shouldRunAndPrintItself()
 		throws Exception
 	{
-
-		synchronized ( System.out )
-		{
-			//System.out.println( "our test encoding = " + Charset.defaultCharset() );
-			System.out.println( getClass().getSimpleName() + "#shouldRunAndPrintItself() "
-                    + counter.incrementAndGet() + ".");
-		}
+		System.out.println( getClass().getSimpleName()
+				+ "#shouldRunAndPrintItself() "
+				+ COUNTER.incrementAndGet()
+				+ "." );
 
 		TimeUnit.SECONDS.sleep( 2 );
 	}
