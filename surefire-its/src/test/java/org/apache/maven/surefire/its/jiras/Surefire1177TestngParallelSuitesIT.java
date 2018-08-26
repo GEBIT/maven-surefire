@@ -26,6 +26,8 @@ import org.junit.Test;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 import static org.apache.maven.surefire.its.fixture.HelperAssertions.assumeJavaVersion;
 import static org.hamcrest.Matchers.containsString;
@@ -50,9 +52,18 @@ public class Surefire1177TestngParallelSuitesIT
         System.out.println( "our encoding = " + Charset.defaultCharset() );
         System.out.println( Arrays.toString( "TestNGSuiteTest#shouldRunAndPrintItself()".getBytes() ) );
 
+        List<String> lines =
         unpack().executeTest()
             .verifyErrorFree( 2 )
-                .assertThatLogLine( containsString( "TestNGSuiteTest#shouldRunAndPrintItself()" ), is( 2 ) );
+                .loadLogLines();
+
+        System.out.println( "lines - 16 : " + lines.get( lines.size() - 16 ) );
+        System.out.println( "lines - 15 : " + lines.get( lines.size() - 15 ) );
+
+        System.out.println( "lines - 16 : " + Arrays.toString( lines.get( lines.size() - 16 ).getBytes() ) );
+        System.out.println( "lines - 15 : " + Arrays.toString( lines.get( lines.size() - 15 ).getBytes() ) );
+
+                //.assertThatLogLine( containsString( "TestNGSuiteTest#shouldRunAndPrintItself()" ), is( 2 ) );
             /*.assertThatLogLine( containsString( "ShouldNotRunTest#shouldNotRun()" ), is( 0 ) )
             .assertThatLogLine( containsString( "TestNGSuiteTest#shouldRunAndPrintItself()" ), is( 2 ) )
             .assertThatLogLine( is( "TestNGSuiteTest#shouldRunAndPrintItself() 1." ), is( 1 ) )
