@@ -25,8 +25,6 @@ import org.apache.maven.surefire.its.fixture.SurefireLauncher;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import static org.apache.maven.surefire.its.fixture.HelperAssertions.assumeJavaVersion;
@@ -50,18 +48,18 @@ public class Surefire1177TestngParallelSuitesIT
         assumeJavaVersion( 1.7d );
 
         System.out.println( "our encoding = " + Charset.defaultCharset() );
-        System.out.println( Arrays.toString( "TestNGSuiteTest#shouldRunAndPrintItself()".getBytes() ) );
+        System.out.println( asInts( "TestNGSuiteTest#shouldRunAndPrintItself()".toCharArray() ) );
 
         List<String> lines =
         unpack().executeTest()
             .verifyErrorFree( 2 )
                 .loadLogLines();
 
+        System.out.println( "lines - 14 : " + lines.get( lines.size() - 14 ) );
         System.out.println( "lines - 13 : " + lines.get( lines.size() - 13 ) );
-        System.out.println( "lines - 12 : " + lines.get( lines.size() - 12 ) );
 
-        System.out.println( "lines - 13 : " + Arrays.toString( lines.get( lines.size() - 13 ).getBytes() ) );
-        System.out.println( "lines - 12 : " + Arrays.toString( lines.get( lines.size() - 12 ).getBytes() ) );
+        System.out.println( "lines - 14 : " + asInts( lines.get( lines.size() - 14 ).toCharArray() ) );
+        System.out.println( "lines - 13 : " + asInts( lines.get( lines.size() - 13 ).toCharArray() ) );
 
                 //.assertThatLogLine( containsString( "TestNGSuiteTest#shouldRunAndPrintItself()" ), is( 2 ) );
             /*.assertThatLogLine( containsString( "ShouldNotRunTest#shouldNotRun()" ), is( 0 ) )
@@ -73,5 +71,16 @@ public class Surefire1177TestngParallelSuitesIT
     private SurefireLauncher unpack()
     {
         return unpack( "testng-parallel-suites" );
+    }
+
+    private String asInts( char[] args )
+    {
+        StringBuilder b = new StringBuilder();
+        for ( char arg : args )
+        {
+            b.append( (int) arg )
+            .append( ", " );
+        }
+        return b.toString();
     }
 }
