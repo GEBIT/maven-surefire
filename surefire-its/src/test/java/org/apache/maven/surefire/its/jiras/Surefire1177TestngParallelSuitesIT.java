@@ -25,9 +25,6 @@ import org.apache.maven.surefire.its.fixture.SurefireJUnit4IntegrationTestCase;
 import org.apache.maven.surefire.its.fixture.SurefireLauncher;
 import org.junit.Test;
 
-import java.nio.charset.Charset;
-import java.util.List;
-
 import static org.apache.maven.surefire.its.fixture.HelperAssertions.assumeJavaVersion;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -43,6 +40,7 @@ public class Surefire1177TestngParallelSuitesIT
     extends SurefireJUnit4IntegrationTestCase
 {
     private static final String EXPECTED_LINE = "TestNGSuiteTest#shouldRunAndPrintItself()";
+    private static final String UNEXPECTED_LINE = "ShouldNotRunTest#shouldNotRun()";
 
     @Test
     public void shouldRunTwoSuitesInParallel()
@@ -50,48 +48,16 @@ public class Surefire1177TestngParallelSuitesIT
     {
         assumeJavaVersion( 1.7d );
 
-        System.out.println( "our encoding = " + Charset.defaultCharset() );
-        System.out.println( asInts( EXPECTED_LINE.toCharArray() ) );
-
         OutputValidator validator = unpack().executeTest().verifyErrorFree( 2 );
 
-        List<String> lines = validator
-                .loadLogLines();
-
-        System.out.println( "lines - 14 : " + lines.get( lines.size() - 14 ) );
-        System.out.println( "lines - 13 : " + lines.get( lines.size() - 13 ) );
-
-        System.out.println( "lines - 14 : " + asInts( lines.get( lines.size() - 14 ).toCharArray() ) );
-        System.out.println( "lines - 13 : " + asInts( lines.get( lines.size() - 13 ).toCharArray() ) );
-
-        System.out.print( lines.get( lines.size() - 14 ).contains( EXPECTED_LINE ) + "\n" );
-        System.out.print( lines.get( lines.size() - 13 ).contains( EXPECTED_LINE ) + "\n" );
-
-        System.out.print( containsString( EXPECTED_LINE ).matches( lines.get( lines.size() - 14 ) ) + "\n" );
-        System.out.print( containsString( EXPECTED_LINE ).matches( lines.get( lines.size() - 13 ) ) + "\n" );
-
-        validator.assertThatLogLine( containsString( EXPECTED_LINE ), is( 2 ) );
-
-                //.assertThatLogLine( containsString( "TestNGSuiteTest#shouldRunAndPrintItself()" ), is( 2 ) );
-            /*.assertThatLogLine( containsString( "ShouldNotRunTest#shouldNotRun()" ), is( 0 ) )
-            .assertThatLogLine( containsString( "TestNGSuiteTest#shouldRunAndPrintItself()" ), is( 2 ) )
-            .assertThatLogLine( is( "TestNGSuiteTest#shouldRunAndPrintItself() 1." ), is( 1 ) )
-            .assertThatLogLine( is( "TestNGSuiteTest#shouldRunAndPrintItself() 2." ), is( 1 ) );*/
+        validator.assertThatLogLine( startsWith( EXPECTED_LINE ), is( 2 ) );
+        validator.assertThatLogLine( is( EXPECTED_LINE + " 1." ), is( 1 ) );
+        validator.assertThatLogLine( is( EXPECTED_LINE + " 2." ), is( 1 ) );
+        validator.assertThatLogLine( containsString( UNEXPECTED_LINE ), is( 0 ) );
     }
 
     private SurefireLauncher unpack()
     {
         return unpack( "testng-parallel-suites" );
-    }
-
-    private String asInts( char[] args )
-    {
-        StringBuilder b = new StringBuilder();
-        for ( char arg : args )
-        {
-            b.append( (int) arg )
-            .append( ", " );
-        }
-        return b.toString();
     }
 }
