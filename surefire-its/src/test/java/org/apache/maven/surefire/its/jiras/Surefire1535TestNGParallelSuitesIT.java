@@ -26,7 +26,7 @@ public class Surefire1535TestNGParallelSuitesIT
         extends SurefireJUnit4IntegrationTestCase
 {
     @Test
-    public void testParallelSuites() throws Exception 
+    public void testParallelSuites()
     {
         unpack("/surefire-1535-parallel-testng")
                 .maven()
