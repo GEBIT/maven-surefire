@@ -169,7 +169,7 @@ public class TestSetRunListener
     }
 
     @Override
-    public void testSetStarting( TestSetReportEntry report )
+    public synchronized void testSetStarting( TestSetReportEntry report )
     {
         detailsForThis.testSetStart();
         consoleReporter.testSetStarting( report );
@@ -183,7 +183,7 @@ public class TestSetRunListener
     }
 
     @Override
-    public void testSetCompleted( TestSetReportEntry report )
+    public synchronized void testSetCompleted( TestSetReportEntry report )
     {
         final WrappedReportEntry wrap = wrapTestSet( report );
         final List<String> testResults =
@@ -208,13 +208,13 @@ public class TestSetRunListener
     // ----------------------------------------------------------------------
 
     @Override
-    public void testStarting( ReportEntry report )
+    public synchronized void testStarting( ReportEntry report )
     {
         detailsForThis.testStart();
     }
 
     @Override
-    public void testSucceeded( ReportEntry reportEntry )
+    public synchronized void testSucceeded( ReportEntry reportEntry )
     {
         WrappedReportEntry wrapped = wrap( reportEntry, SUCCESS );
         detailsForThis.testSucceeded( wrapped );
@@ -223,7 +223,7 @@ public class TestSetRunListener
     }
 
     @Override
-    public void testError( ReportEntry reportEntry )
+    public synchronized void testError( ReportEntry reportEntry )
     {
         WrappedReportEntry wrapped = wrap( reportEntry, ERROR );
         detailsForThis.testError( wrapped );
@@ -232,10 +232,10 @@ public class TestSetRunListener
     }
 
     @Override
-    public void testFailed( ReportEntry reportEntry )
+    public synchronized void testFailed( ReportEntry reportEntry )
     {
         WrappedReportEntry wrapped = wrap( reportEntry, FAILURE );
-        detailsForThis.testFailure( wrapped );
+        detailsForThis.testFailure( wrapped ); // koli detailsForThis musia byt metody synchronizovane
         statisticsReporter.testFailed( reportEntry );
         clearCapture();
     }
@@ -245,7 +245,7 @@ public class TestSetRunListener
     // ----------------------------------------------------------------------
 
     @Override
-    public void testSkipped( ReportEntry reportEntry )
+    public synchronized void testSkipped( ReportEntry reportEntry )
     {
         WrappedReportEntry wrapped = wrap( reportEntry, SKIPPED );
         detailsForThis.testSkipped( wrapped );
@@ -254,12 +254,12 @@ public class TestSetRunListener
     }
 
     @Override
-    public void testExecutionSkippedByUser()
+    public synchronized void testExecutionSkippedByUser()
     {
     }
 
     @Override
-    public void testAssumptionFailure( ReportEntry report )
+    public synchronized void testAssumptionFailure( ReportEntry report )
     {
         testSkipped( report );
     }
@@ -283,7 +283,7 @@ public class TestSetRunListener
             : detailsForThis.getElapsedSinceTestSetStart(), testStdOut, testStdErr, other.getSystemProperties() );
     }
 
-    public void close()
+    public synchronized void close()
     {
         consoleOutputReceiver.close();
     }
@@ -299,7 +299,7 @@ public class TestSetRunListener
         }
     }
 
-    public List<TestMethodStats> getTestMethodStats()
+    public synchronized List<TestMethodStats> getTestMethodStats()
     {
         return testMethodStats;
     }
@@ -312,6 +312,6 @@ public class TestSetRunListener
 
     private static int lineBoundSymbolWidth( String message )
     {
-        return message.endsWith( "\n" ) || message.endsWith( "\r" ) ? 1 : ( message.endsWith( "\r\n" ) ? 2 : 0 );
+        return message.endsWith( "\r\n" ) ? 2 : ( message.endsWith( "\n" ) || message.endsWith( "\r" ) ? 1 : 0 );
     }
 }
