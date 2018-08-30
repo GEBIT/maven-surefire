@@ -152,7 +152,7 @@ public final class SurefireHelper
             return;
         }
 
-        if ( reportParameters.isTestFailureIgnore() )
+        if ( reportParameters.isTestFailureIgnore() && !isFatal( firstForkException ) && !result.isInternalError() )
         {
             log.error( createErrorMessage( reportParameters, result, firstForkException ) );
         }
